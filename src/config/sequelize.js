@@ -53,6 +53,6 @@ const sequelizeSessionStore = new SessionStore({
 });
 
 module.exports = {
-    db: DBSequelize,
+    DBSequelize,
     sequelizeSessionStore
 }

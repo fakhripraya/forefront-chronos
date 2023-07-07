@@ -33,7 +33,6 @@ function splitFileNameAndExtension(filePath) {
     return { fileName, fileExtension };
 }
 
-
 function readFile(path) {
     try {
         fs.readFileSync(path, "utf8");

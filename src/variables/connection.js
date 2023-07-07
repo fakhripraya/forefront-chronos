@@ -1,5 +1,5 @@
-const APP_ALLOW_LIST = process.env.APP_ALLOW_LIST;
+const APP_ORIGIN = process.env.APP_ORIGIN || "http://localhost:8000";
 
 module.exports = {
-    ALLOW_LIST: APP_ALLOW_LIST
+    ALLOW_LIST: [APP_ORIGIN]
 }
