@@ -17,14 +17,6 @@ const defaultRoute = (app) => {
         if (error) res.send(error).status(status);
         else res.send(result).status(status);
     });
-
-    app.patch(`/v${process.env.APP_MAJOR_VERSION}/user/edit`, checkCredentialToken, async (req, res) => {
-
-        // check query param availability
-        if (!req.query) return res.sendStatus(400);
-        // Get the request body
-        const request = req.query;
-    });
 }
 
 module.exports = {
