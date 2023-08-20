@@ -1,7 +1,7 @@
 # Chronos
 
 This is the main credential service mainly used 
-for coolie file distribution system.
+for app file distribution system.
 
 Feature Included:
 
