@@ -1,11 +1,13 @@
 # Chronos
 
-This is the main credential service mainly used 
+This service is mainly used 
 for app file distribution system.
 
 Feature Included:
 
-- Google drive file distribution
+- Image file distribution
+- Video file distribution
+- Etc
 
 # This is protected Branch don't push your code here ! ! !
 
