@@ -1,12 +1,32 @@
-const { db } = require("../config/sequelize");
+const { db } = require("../config");
 const { MasterFile } = require("./objects/master_file");
 const { MasterStore } = require("./objects/master_stores");
 const {
   MasterStoreDisplayItem,
 } = require("./objects/master_stores_display_item");
+const { MasterUser } = require("./user/master_user");
 
 const InitModels = async () => {
   // START ASSOCIATING
+  // TODO: make this migration system aN NPM package later
+  // MasterStore - MasterUser ASSOCIATION
+  MasterUser.hasMany(MasterStore, {
+    foreignKey: {
+      name: "userId",
+      allowNull: false,
+    },
+    sourceKey: "id",
+    constraints: false,
+  });
+  MasterStore.belongsTo(MasterUser, {
+    foreignKey: {
+      name: "userId",
+      allowNull: false,
+    },
+    targetKey: "id",
+    constraints: false,
+  });
+
   // MasterFile - MasterStoreDisplayItem ASSOCIATION
   MasterFile.belongsTo(MasterStoreDisplayItem, {
     foreignKey: {
@@ -45,7 +65,10 @@ const InitModels = async () => {
   // END OF ASSOCIATING
 
   await db
-    .sync({ alter: true, force: false })
+    .sync({
+      alter: true,
+      force: false,
+    })
     .then(() => {
       console.log(
         "All models has been synchronized successfully."
