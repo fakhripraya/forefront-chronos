@@ -1,18 +1,19 @@
-const multer = require('multer');
+const multer = require("multer");
 
+// Configure multer storage and file name
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, '/tmp/my-uploads')
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-        cb(null, file.fieldname + '-' + uniqueSuffix)
-    }
-})
-
-const upload = multer({
-    limits: {
-        storage: storage,
-        fieldSize: 5
-    }
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
 });
+
+// Create multer upload instance
+const upload = multer({ storage: storage });
+
+module.exports = {
+  storage,
+  upload,
+};
