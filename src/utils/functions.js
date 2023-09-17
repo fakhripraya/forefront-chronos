@@ -11,6 +11,7 @@ const {
 const {
   DYNAMIC_ASSET_FOLDER_PATH,
 } = require("../variables/general");
+const rootPath = process.cwd();
 
 async function SequelizeRollback(trx, error) {
   console.log(error);
@@ -103,7 +104,7 @@ function createFileSync(destination, buffer, mode) {
   console.log(destination);
   console.log(buffer);
   fs.writeFileSync(
-    path.join(__dirname, destination),
+    path.join(rootPath, destination),
     buffer,
     mode,
     (err) => {
@@ -112,10 +113,10 @@ function createFileSync(destination, buffer, mode) {
   );
 }
 
-function createFolderSync(folderPath) {
+function createFolderSync(folderPath = "/") {
   fs.mkdirSync(
     path.join(
-      __dirname,
+      rootPath,
       DYNAMIC_ASSET_FOLDER_PATH + folderPath
     ),
     { recursive: true },
@@ -129,7 +130,7 @@ function unlinkFilesSync(filesToDelete) {
   for (const file of filesToDelete) {
     // Check if the file exists before attempting to delete it
     fs.access(
-      path.join(__dirname, file.destination),
+      path.join(rootPath, file.destination),
       fs.constants.F_OK,
       (err) => {
         if (!err) {

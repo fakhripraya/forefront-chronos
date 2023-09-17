@@ -40,7 +40,7 @@ const defaultRoute = (app) => {
           encoding: file.encoding,
           mimetype: file.mimetype,
           fileType: file.fileType,
-          destination: `${DYNAMIC_ASSET_FOLDER_PATH}/${file.fileType}/${file.filename}`,
+          destination: `${DYNAMIC_ASSET_FOLDER_PATH}/${file.fileType}/${req.user.userId}/${file.filename}`,
           displayItemId: file.displayItemId,
           storeId: file.storeId,
           status: file.status,
