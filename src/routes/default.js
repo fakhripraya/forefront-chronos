@@ -10,7 +10,6 @@ const {
   unlinkFilesSync,
 } = require("../utils/functions");
 const { checkAuth } = require("../utils/middleware");
-const fs = require("fs");
 const {
   UNIDENTIFIED_ERROR,
   ERROR_WHILE_UPLOADING_FILES,
@@ -19,7 +18,9 @@ const multer = require("multer");
 const {
   DYNAMIC_ASSET_FOLDER_PATH,
 } = require("../variables/general");
-const upload = multer();
+const upload = multer({
+  limits: { fieldSize: 25 * 1024 * 1024 },
+});
 
 const defaultRoute = (app) => {
   // TODO: FIX VERSIONING ON ROUTE, VERSIONING IS NOT ABOUT THE APP VERSION BUT THE ROUTE VERSION
@@ -40,6 +41,7 @@ const defaultRoute = (app) => {
           encoding: file.encoding,
           mimetype: file.mimetype,
           fileType: file.fileType,
+          folderDestination: `/${file.fileType}/${req.user.userId}`,
           destination: `${DYNAMIC_ASSET_FOLDER_PATH}/${file.fileType}/${req.user.userId}/${file.filename}`,
           displayItemId: file.displayItemId,
           storeId: file.storeId,
@@ -62,7 +64,9 @@ const defaultRoute = (app) => {
         // use index to fetch different properties between "fileDatas" and "files"
         try {
           for (let i = 0; i < fileDatas.length; i++) {
-            createFolderSync(`/${fileDatas[i].fileType}`);
+            createFolderSync(
+              `/${fileDatas[i].folderDestination}`
+            );
             createFileSync(
               fileDatas[i].destination,
               Buffer.from(files[i].buffer.data)
