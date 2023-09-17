@@ -4,7 +4,7 @@ const SUCCESS = "SUCCESS";
 const PRODUCT_CATALOGUE_IMAGE = "PRODUCT_CATALOGUE_IMAGE";
 const PRODUCT_CATALOGUE_ADDITIONAL_FILES =
   "PRODUCT_CATALOGUE_ADDITIONAL_FILES";
-const DYNAMIC_ASSET_FOLDER_PATH = `/tmp/uploads`;
+const DYNAMIC_ASSET_FOLDER_PATH = `/public/uploads`;
 
 // PREFIXES
 const STR = "STR"; // this is the prefix for store code

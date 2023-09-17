@@ -15,6 +15,11 @@ const AppConfig = (app, express) => {
   app.use(logger("dev"));
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
+  // Specify the directory where your files are located
+  const rootPath = process.cwd();
+  const staticFilePath = rootPath + "/"; // Replace with your file directory
+  // Use express.static middleware to serve files from the specified directory
+  app.use(express.static(staticFilePath));
 
   if (
     process.env.APP_STATE === PROD ||

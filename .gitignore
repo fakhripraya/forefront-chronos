@@ -13,6 +13,7 @@
 
 # misc
 /tmp
+/public
 .DS_Store
 .env
 .env.local
