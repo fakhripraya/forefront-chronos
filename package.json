@@ -1,6 +1,6 @@
 {
   "name": "chronos-service",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "This is the main credential service mainly used \r for coolie file distribution system.",
   "main": "index.js",
   "scripts": {
