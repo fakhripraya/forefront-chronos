@@ -18,6 +18,7 @@ const multer = require("multer");
 const {
   DYNAMIC_ASSET_FOLDER_PATH,
 } = require("../variables/general");
+const { uuid } = require("uuidv4");
 const upload = multer({
   limits: { fieldSize: 25 * 1024 * 1024 },
 });
@@ -36,13 +37,15 @@ const defaultRoute = (app) => {
       // initialize variable
       const files = JSON.parse(req.body.files);
       const fileDatas = files.map((file) => {
+        const newId = uuid();
         return {
+          id: newId,
           filename: file.filename,
           encoding: file.encoding,
           mimetype: file.mimetype,
           fileType: file.fileType,
-          folderDestination: `/${file.fileType}/${req.user.userId}`,
-          destination: `${DYNAMIC_ASSET_FOLDER_PATH}/${file.fileType}/${req.user.userId}/${file.filename}`,
+          folderDestination: `/${file.fileType}/${newId}`,
+          destination: `${DYNAMIC_ASSET_FOLDER_PATH}/${file.fileType}/${newId}/${file.filename}`,
           displayItemId: file.displayItemId,
           storeId: file.storeId,
           status: file.status,
@@ -55,6 +58,7 @@ const defaultRoute = (app) => {
         // bulk create the files that in an array format
         await MasterFile.bulkCreate(fileDatas, {
           transaction: trx,
+          lock: true,
         });
 
         // Write File Logic

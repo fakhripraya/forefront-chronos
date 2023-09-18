@@ -38,7 +38,6 @@ const MasterFile = db.define(
     },
   },
   {
-    indexes: [{ unique: true, fields: ["filename"] }],
     paranoid: true,
     deletedAt: "destroyTime",
     tableName: "master_file",
