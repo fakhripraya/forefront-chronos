@@ -21,41 +21,33 @@ const MasterStoreDisplayItem = db.define(
     },
     productDescription: {
       allowNull: false,
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     productHashtag: {
       allowNull: false,
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     productCondition: {
       allowNull: false,
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     productWeight: {
       allowNull: false,
       type: DataTypes.FLOAT,
     },
-    productBidPrice: {
-      allowNull: false,
-      type: DataTypes.DECIMAL,
-    },
-    productBINPrice: {
-      allowNull: false,
-      type: DataTypes.DECIMAL,
-    },
-    productBidMultiplication: {
-      allowNull: false,
-      type: DataTypes.DECIMAL,
-    },
-    productBidMultiplicationPeriod: {
+    productWeightUnit: {
       allowNull: false,
       type: DataTypes.STRING,
     },
-    productBidPeriod: {
+    productPrice: {
       allowNull: false,
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL,
     },
     productStocks: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+    },
+    productSafetyStocks: {
       allowNull: false,
       type: DataTypes.INTEGER,
     },

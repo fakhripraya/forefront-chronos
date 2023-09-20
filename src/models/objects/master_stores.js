@@ -21,7 +21,7 @@ const MasterStore = db.define(
     },
     storeDescription: {
       allowNull: false,
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     storePhone: {
       allowNull: false,
