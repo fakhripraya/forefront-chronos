@@ -1,6 +1,12 @@
 const { db } = require("../config");
+const {
+  MasterCategory,
+} = require("./objects/master_category");
 const { MasterFile } = require("./objects/master_file");
 const { MasterStore } = require("./objects/master_stores");
+const {
+  MasterStoreCatalogue,
+} = require("./objects/master_stores_catalogue");
 const {
   MasterStoreDisplayItem,
 } = require("./objects/master_stores_display_item");
@@ -27,6 +33,24 @@ const InitModels = async () => {
     constraints: false,
   });
 
+  // MasterStore - MasterStoreCatalogue ASSOCIATION
+  MasterStoreCatalogue.belongsTo(MasterStore, {
+    foreignKey: {
+      name: "storeId",
+      allowNull: false,
+    },
+    targetKey: "id",
+    constraints: false,
+  });
+  MasterStore.hasMany(MasterStoreCatalogue, {
+    foreignKey: {
+      name: "storeId",
+      allowNull: false,
+    },
+    sourceKey: "id",
+    constraints: false,
+  });
+
   // MasterFile - MasterStoreDisplayItem ASSOCIATION
   MasterFile.belongsTo(MasterStoreDisplayItem, {
     foreignKey: {
@@ -40,6 +64,42 @@ const InitModels = async () => {
     foreignKey: {
       name: "displayItemId",
       allowNull: true,
+    },
+    sourceKey: "id",
+    constraints: false,
+  });
+
+  // MasterStoreDisplayItem - MasterStoreCatalogue ASSOCIATION
+  MasterStoreDisplayItem.belongsTo(MasterStoreCatalogue, {
+    foreignKey: {
+      name: "catalogueId",
+      allowNull: false,
+    },
+    targetKey: "id",
+    constraints: false,
+  });
+  MasterStoreCatalogue.hasMany(MasterStoreDisplayItem, {
+    foreignKey: {
+      name: "catalogueId",
+      allowNull: false,
+    },
+    sourceKey: "id",
+    constraints: false,
+  });
+
+  // MasterStoreDisplayItem - MasterCategory ASSOCIATION
+  MasterStoreDisplayItem.belongsTo(MasterCategory, {
+    foreignKey: {
+      name: "categoryId",
+      allowNull: false,
+    },
+    targetKey: "id",
+    constraints: false,
+  });
+  MasterCategory.hasMany(MasterStoreDisplayItem, {
+    foreignKey: {
+      name: "categoryId",
+      allowNull: false,
     },
     sourceKey: "id",
     constraints: false,
