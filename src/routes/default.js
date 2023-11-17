@@ -1,7 +1,6 @@
 const { db } = require("../config");
-const {
-  MasterFile,
-} = require("forefront-polus/src/models/objects/master_file");
+const { MasterFile } =
+  require("forefront-polus/src/models/index")();
 const {
   SequelizeErrorHandling,
   SequelizeRollback,

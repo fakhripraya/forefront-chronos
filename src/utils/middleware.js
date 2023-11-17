@@ -5,9 +5,7 @@ const {
   PLEASE_VERIFY_OTP,
 } = require("../variables/responseMessage");
 const { X_SID } = require("../variables/general");
-const {
-  sessionStore,
-} = require("forefront-polus/src/config/index");
+const { sessionStore } = require("../config/index");
 
 async function checkAuth(req, res, next) {
   // Check the user session
