@@ -1,10 +1,12 @@
 const { db } = require("../config");
 const {
   MasterFile,
-} = require("../models/objects/master_file");
+} = require("forefront-polus/src/models/objects/master_file");
 const {
   SequelizeErrorHandling,
   SequelizeRollback,
+} = require("forefront-polus/src/utils/functions");
+const {
   createFolderSync,
   createFileSync,
   unlinkFilesSync,

@@ -1,8 +1,8 @@
 const cors = require("cors");
 const {
-  DBSequelize,
-  sequelizeSessionStore,
-} = require("./sequelize");
+  db,
+  sessionStore,
+} = require("forefront-polus/src/config/index");
 const { CORSConfiguration } = require("./connection");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
@@ -61,7 +61,7 @@ const AppConfig = (app, express) => {
       resave: false, // don't save session if unmodified
       rolling: true, // refresh the session max age on every response
       saveUninitialized: false,
-      store: sequelizeSessionStore,
+      store: sessionStore,
     })
   );
 
@@ -75,5 +75,6 @@ const AppConfig = (app, express) => {
 
 module.exports = {
   AppConfig,
-  db: DBSequelize,
+  db,
+  sessionStore,
 };
