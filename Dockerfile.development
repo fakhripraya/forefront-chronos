@@ -1,0 +1,25 @@
+# Use the official Node.js image with a specific version
+FROM node:18.17.0-alpine
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the rest of the application files 
+# The reason why we copy all first because we have tarball files 
+# That needed for local package install
+COPY . .
+
+# Copy package.json and package-lock.json (if applicable)
+COPY package*.json ./
+
+# Install npm dependencies
+RUN npm install
+
+# Set environment variables from .env.development
+ENV $(cat .env.development | xargs)
+
+# Expose the port your app will run on
+EXPOSE 8005
+
+# Command to run your application
+CMD ["node", "index.js"]

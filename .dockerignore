@@ -1,0 +1,48 @@
+# Ignore development and test-specific files
+.dockerignore
+.dockerignore.example
+.dockerignore.template
+
+# Ignore version control files
+.git
+.gitignore
+.gitattributes
+.hg
+.hgignore
+.hgrags
+
+# Ignore editor-specific files
+.vscode
+.idea
+
+# Ignore build and package management files
+node_modules
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Ignore environment-specific files
+# .env
+# .env.local
+# .env.development
+# .env.test
+# .env.production
+
+# Ignore logs and temporary files
+logs
+*.log*
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore build artifacts and output
+dist
+out
+build
+
+# Ignore unnecessary files
+.DS_Store
+Thumbs.db
+desktop.ini
