@@ -36,17 +36,23 @@ const defaultRoute = (app) => {
         return res.status(400).send(UNIDENTIFIED_ERROR);
 
       // initialize variable
+      // FIXME: Error while saving file with several special character in the filename
+      // EXAMPLE: if the file name is valorant#2_Moment2jpg.jpg,
+      // the api will fetch /valorant instead of /valorant#2_Moment2jpg.jpg
+      // most likely the API think that it is a hash url
+      // TODO: maybe change the filename into a uuid, ex: file_${uuid}.extension
       const files = JSON.parse(req.body.files);
       const fileDatas = files.map((file) => {
         const newId = uuid();
         return {
           id: newId,
-          filename: file.filename,
+          filename: `file_${newId}`,
           encoding: file.encoding,
           mimetype: file.mimetype,
           fileType: file.fileType,
           folderDestination: `/${file.fileType}/${newId}`,
-          destination: `${DYNAMIC_ASSET_FOLDER_PATH}/${file.fileType}/${newId}/${file.filename}`,
+          destination: `${DYNAMIC_ASSET_FOLDER_PATH}/${file.fileType}/${newId}/file_${newId}`,
+          //destination: `${DYNAMIC_ASSET_FOLDER_PATH}/${file.fileType}/${newId}/${file.filename}`,
           displayItemId: file.displayItemId,
           storeId: file.storeId,
           status: file.status,

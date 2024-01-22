@@ -56,8 +56,6 @@ function splitFileNameAndExtension(filePath) {
 }
 
 function createFileSync(destination, buffer, mode) {
-  console.log(destination);
-  console.log(buffer);
   fs.writeFileSync(
     path.join(rootPath, destination),
     buffer,
