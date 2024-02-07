@@ -79,19 +79,19 @@ function createFolderSync(folderPath = "/") {
   );
 }
 
-function unlinkFilesSync(filesToDelete) {
-  for (const file of filesToDelete) {
+function unlinkFilesSync(destinations) {
+  for (const destination of destinations) {
     // Check if the file exists before attempting to delete it
     fs.access(
-      path.join(rootPath, file.destination),
+      path.join(rootPath, destination),
       fs.constants.F_OK,
       (err) => {
         if (!err) {
           // File exists, so you can safely unlink it
-          fs.unlink(file.destination, (err) => {
+          fs.unlink(destination, (err) => {
             if (err) {
               console.error(
-                `Error deleting file '${file.destination}': ${err}`
+                `Error deleting file '${destination}': ${err}`
               );
             }
           });
