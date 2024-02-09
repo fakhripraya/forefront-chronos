@@ -1,4 +1,7 @@
 const { db } = require("../config");
+const fs = require("fs");
+const path = require("path");
+const mime = require("mime-types");
 const { MasterFile } =
   require("forefront-polus/src/models/index")();
 const {
@@ -12,7 +15,6 @@ const {
 } = require("../utils/functions");
 const { checkAuth } = require("../utils/middleware");
 const {
-  UNIDENTIFIED_ERROR,
   ERROR_WHILE_UPLOADING_FILES,
 } = require("../variables/responseMessage");
 const multer = require("multer");
@@ -25,18 +27,116 @@ const upload = multer({
 });
 
 const defaultRoute = (app) => {
+  app.get("/v1/file", (req, res) => {
+    // get the query param
+    const fileType = req.query.fileType;
+    const fileId = req.query.fileId;
+    const fileName = req.query.fileName;
+    const mimeType = req.query.mimeType;
+
+    // define the path
+    const filePath = path.join(
+      __dirname,
+      `../../public/uploads/${fileType}/${fileId}/${fileName}`
+    );
+
+    // Read the file as a Buffer
+    fs.readFile(filePath, async (err, data) => {
+      if (err) {
+        console.error("Error reading file:", err);
+        return res
+          .status(500)
+          .send("Internal Server Error");
+      }
+
+      // Get the MIME type based on the file extension
+      const fileMimeType =
+        mimeType || mime.lookup(filePath);
+
+      // Get the file size
+      const fileSizeInBytes = data.length;
+
+      // Convert file content to base64
+      const base64Data =
+        Buffer.from(data).toString("base64");
+
+      // If successful, send the base64 content and MIME type as a response
+      // Create a string compatible with HtmlImageElement src attribute
+      const imgSrcString = `data:${fileMimeType};base64,${base64Data}`;
+
+      // If successful, send the imgSrcString as a response
+      res.status(200).send({
+        name: fileName,
+        type: fileMimeType,
+        size: fileSizeInBytes,
+        base64: imgSrcString,
+      });
+    });
+  });
+
+  app.get("/v1/files", async (req, res) => {
+    // get the query param
+    const fileInfos =
+      req.query.fileInfos &&
+      JSON.parse(req.query.fileInfos);
+
+    var promises = fileInfos.map(
+      (val) =>
+        new Promise((resolve, reject) => {
+          try {
+            // define the path
+            const filePath = path.join(
+              __dirname,
+              `../../public/uploads/${val.fileType}/${val.fileId}/${val.fileName}`
+            );
+
+            // Read the file as a Buffer
+            fs.readFile(filePath, async (err, data) => {
+              if (err) throw new Error(err);
+
+              // Get the MIME type based on the file extension
+              const fileMimeType =
+                val.mimeType || mime.lookup(filePath);
+
+              // Get the file size
+              const fileSizeInBytes = data.length;
+
+              // Convert file content to base64
+              const base64Data =
+                Buffer.from(data).toString("base64");
+
+              // If successful, send the base64 content and MIME type as a response
+              // Create a string compatible with HtmlImageElement src attribute
+              const imgSrcString = `data:${fileMimeType};base64,${base64Data}`;
+
+              // If successful, send the imgSrcString as a response
+              resolve({
+                name: val.fileName,
+                type: fileMimeType,
+                size: fileSizeInBytes,
+                base64: imgSrcString,
+              });
+            });
+          } catch (error) {
+            reject(error);
+          }
+        })
+    );
+
+    await Promise.all(promises)
+      .then((results) => {
+        res.send(results);
+      })
+      .catch((err) => res.send(err));
+  });
+
   // TODO: FIX VERSIONING ON ROUTE, VERSIONING IS NOT ABOUT THE APP VERSION BUT THE ROUTE VERSION
   app.post(
     `/v${process.env.APP_MAJOR_VERSION}/files/upload`,
     checkAuth,
     upload.none(),
     async (req, res) => {
-      // validation
-      if (!req.body)
-        return res.status(400).send(UNIDENTIFIED_ERROR);
-
       const files = JSON.parse(req.body.files);
-
       // Proceed mapping the new file objects into the desired format
       let fileDatas;
       let fileDataDestinations;
@@ -106,12 +206,6 @@ const defaultRoute = (app) => {
     checkAuth,
     upload.none(),
     async (req, res) => {
-      // validation
-      if (!req.body)
-        return res.status(400).send(UNIDENTIFIED_ERROR);
-      if (!req.query)
-        return res.status(400).send(UNIDENTIFIED_ERROR);
-
       const files = JSON.parse(req.body.files);
       const oldFiles = JSON.parse(req.body.oldFiles);
       const fileType = req.query.fileType;
@@ -200,12 +294,6 @@ const defaultRoute = (app) => {
     checkAuth,
     upload.none(),
     async (req, res) => {
-      // validation
-      if (!req.body)
-        return res.status(400).send(UNIDENTIFIED_ERROR);
-      if (!req.query)
-        return res.status(400).send(UNIDENTIFIED_ERROR);
-
       const oldFiles = JSON.parse(req.body.oldFiles);
       const fileType = req.query.fileType;
       if (!fileType)

@@ -30,6 +30,7 @@
     "fs-extra": "^11.1.0",
     "googleapis": "^110.0.0",
     "jsonwebtoken": "^9.0.0",
+    "mime-types": "^2.1.35",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^2.3.3",
