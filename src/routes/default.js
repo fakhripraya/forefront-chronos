@@ -1,3 +1,4 @@
+const express = require("express");
 const { db } = require("../config");
 const fs = require("fs");
 const path = require("path");
@@ -41,7 +42,7 @@ const defaultRoute = (app) => {
     );
 
     // Read the file as a Buffer
-    fs.readFile(filePath, async (err, data) => {
+    fs.statSync(filePath, (err, stat) => {
       if (err) {
         console.error("Error reading file:", err);
         return res
@@ -53,24 +54,17 @@ const defaultRoute = (app) => {
       const fileMimeType =
         mimeType || mime.lookup(filePath);
 
-      // Get the file size
-      const fileSizeInBytes = data.length;
-
-      // Convert file content to base64
-      const base64Data =
-        Buffer.from(data).toString("base64");
-
-      // If successful, send the base64 content and MIME type as a response
-      // Create a string compatible with HtmlImageElement src attribute
-      const imgSrcString = `data:${fileMimeType};base64,${base64Data}`;
-
-      // If successful, send the imgSrcString as a response
-      res.status(200).send({
+      const multipartResponse = {
         name: fileName,
         type: fileMimeType,
-        size: fileSizeInBytes,
-        base64: imgSrcString,
-      });
+        size: stat.size,
+        url: `${req.protocol}://${req.get(
+          "host"
+        )}/public/uploads/${fileType}/${fileId}/${fileName}`,
+      };
+
+      // Return the multipart response
+      return res.status(200).send(multipartResponse);
     });
   });
 
@@ -90,32 +84,18 @@ const defaultRoute = (app) => {
               `../../public/uploads/${val.fileType}/${val.fileId}/${val.fileName}`
             );
 
-            // Read the file as a Buffer
-            fs.readFile(filePath, async (err, data) => {
-              if (err) throw new Error(err);
+            const fileMimeType =
+              val.mimeType || mime.lookup(filePath);
 
-              // Get the MIME type based on the file extension
-              const fileMimeType =
-                val.mimeType || mime.lookup(filePath);
-
-              // Get the file size
-              const fileSizeInBytes = data.length;
-
-              // Convert file content to base64
-              const base64Data =
-                Buffer.from(data).toString("base64");
-
-              // If successful, send the base64 content and MIME type as a response
-              // Create a string compatible with HtmlImageElement src attribute
-              const imgSrcString = `data:${fileMimeType};base64,${base64Data}`;
-
-              // If successful, send the imgSrcString as a response
-              resolve({
-                name: val.fileName,
-                type: fileMimeType,
-                size: fileSizeInBytes,
-                base64: imgSrcString,
-              });
+            resolve({
+              name: val.fileName,
+              type: fileMimeType,
+              size: fs.statSync(filePath).size,
+              url: `${req.protocol}://${req.get(
+                "host"
+              )}/public/uploads/${val.fileType}/${
+                val.fileId
+              }/${val.fileName}`,
             });
           } catch (error) {
             reject(error);
@@ -124,10 +104,10 @@ const defaultRoute = (app) => {
     );
 
     await Promise.all(promises)
-      .then((results) => {
-        res.send(results);
-      })
-      .catch((err) => res.send(err));
+      .then((results) => res.status(200).send(results))
+      .catch((error) =>
+        res.status(400).send({ error: error.message })
+      );
   });
 
   // TODO: FIX VERSIONING ON ROUTE, VERSIONING IS NOT ABOUT THE APP VERSION BUT THE ROUTE VERSION
@@ -206,9 +186,12 @@ const defaultRoute = (app) => {
     checkAuth,
     upload.none(),
     async (req, res) => {
-      const files = JSON.parse(req.body.files);
-      const oldFiles = JSON.parse(req.body.oldFiles);
+      const files =
+        req.body.files && JSON.parse(req.body.files);
+      const oldFiles =
+        req.body.oldFiles && JSON.parse(req.body.oldFiles);
       const fileType = req.query.fileType;
+
       if (!fileType)
         return res.status(400).send("Error: No fileType");
 

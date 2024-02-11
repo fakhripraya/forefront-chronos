@@ -1,81 +1,51 @@
 // GENERAL
-const USER = "USER";
-const SUCCESS = "SUCCESS";
-const PRODUCT_CATALOGUE_IMAGE = "PRODUCT_CATALOGUE_IMAGE";
-const PRODUCT_CATALOGUE_ADDITIONAL_FILES =
+exports.USER = "USER";
+exports.SUCCESS = "SUCCESS";
+exports.PRODUCT_CATALOGUE_IMAGE = "PRODUCT_CATALOGUE_IMAGE";
+exports.PRODUCT_CATALOGUE_ADDITIONAL_FILES =
   "PRODUCT_CATALOGUE_ADDITIONAL_FILES";
-const DYNAMIC_ASSET_FOLDER_PATH = `/public/uploads`;
+exports.DYNAMIC_ASSET_FOLDER_PATH = `/public/uploads`;
 
 // PREFIXES
-const STR = "STR"; // this is the prefix for store code
-const PRD = "PRD"; // this is the prefix for product code
-const CLOG = "CLOG"; // this is the prefix for catalogue code
+exports.STR = "STR"; // this is the prefix for store code
+exports.PRD = "PRD"; // this is the prefix for product code
+exports.CLOG = "CLOG"; // this is the prefix for catalogue code
 
 // HEADER NAME
-const X_SID = "x-sid";
-const AUTHORIZATION = "authorization";
+exports.X_SID = "x-sid";
+exports.AUTHORIZATION = "authorization";
 
 // AXIOS
-const POST = "POST";
-const GET = "GET";
+exports.POST = "POST";
+exports.GET = "GET";
 
 // AXIOS LOG TITLE
-const GET_CHECK_AUTH_TOKEN = "GET_CHECK_AUTH_TOKEN";
-const POST_SEND_PROFILEPIC = "POST_SEND_PROFILEPIC";
-const POST_ADD_CATALOGUE = "POST_ADD_KATEGORI";
+exports.GET_CHECK_AUTH_TOKEN = "GET_CHECK_AUTH_TOKEN";
+exports.POST_SEND_PROFILEPIC = "POST_SEND_PROFILEPIC";
+exports.POST_ADD_CATALOGUE = "POST_ADD_KATEGORI";
 
 // EMAIL TYPE
-const SEND_OTP = "SEND_OTP";
+exports.SEND_OTP = "SEND_OTP";
 
 // EMAIL SUBJECT
-const OTP_EMAIL =
+exports.OTP_EMAIL =
   "Account Registration - Berikut adalah nomor OTPmu, jangan disebar ya !";
 
 // API URLs
-const CHECK_AUTH_TOKEN = `/v${process.env.APP_OLYMPUS_SERVICE_MAJOR_VERSION}/auth/check`;
+exports.CHECK_AUTH_TOKEN = `/v${process.env.APP_OLYMPUS_SERVICE_MAJOR_VERSION}/auth/check`;
 
 // STATUSES
-const ACTIVE = "ACTIVE";
-const NON_ACTIVE = "NON_ACTIVE";
-const DELETED = "DELETED";
+exports.ACTIVE = "ACTIVE";
+exports.NON_ACTIVE = "NON_ACTIVE";
+exports.DELETED = "DELETED";
 
 // DEFAULT VALUES
-const PROVINCE_DEFAULT_VALUE = "PILIH PROVINSI";
-const REGENCY_DEFAULT_VALUE = "PILIH KOTA";
-const DISTRICT_DEFAULT_VALUE = "PILIH KECAMATAN";
-const VILLAGE_DEFAULT_VALUE = "PILIH KELURAHAN";
+exports.PROVINCE_DEFAULT_VALUE = "PILIH PROVINSI";
+exports.REGENCY_DEFAULT_VALUE = "PILIH KOTA";
+exports.DISTRICT_DEFAULT_VALUE = "PILIH KECAMATAN";
+exports.VILLAGE_DEFAULT_VALUE = "PILIH KELURAHAN";
 
 // OTHERS
-const EMPTY_STRING = "";
-const ALPHABETH_CHAR_AND_NUMBER =
+exports.EMPTY_STRING = "";
+exports.ALPHABETH_CHAR_AND_NUMBER =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-module.exports = {
-  POST_ADD_CATALOGUE,
-  POST_SEND_PROFILEPIC,
-  PRODUCT_CATALOGUE_IMAGE,
-  PRODUCT_CATALOGUE_ADDITIONAL_FILES,
-  DYNAMIC_ASSET_FOLDER_PATH,
-  USER,
-  SUCCESS,
-  X_SID,
-  AUTHORIZATION,
-  STR,
-  PRD,
-  CLOG,
-  POST,
-  GET,
-  GET_CHECK_AUTH_TOKEN,
-  SEND_OTP,
-  OTP_EMAIL,
-  CHECK_AUTH_TOKEN,
-  EMPTY_STRING,
-  ALPHABETH_CHAR_AND_NUMBER,
-  ACTIVE,
-  NON_ACTIVE,
-  DELETED,
-  PROVINCE_DEFAULT_VALUE,
-  REGENCY_DEFAULT_VALUE,
-  DISTRICT_DEFAULT_VALUE,
-  VILLAGE_DEFAULT_VALUE,
-};
