@@ -32,7 +32,7 @@ exports.OTP_EMAIL =
   "Account Registration - Berikut adalah nomor OTPmu, jangan disebar ya !";
 
 // API URLs
-exports.CHECK_AUTH_TOKEN = `/v${process.env.APP_OLYMPUS_SERVICE_MAJOR_VERSION}/auth/check`;
+exports.CHECK_AUTH_TOKEN = `/v1/auth/check`;
 
 // STATUSES
 exports.ACTIVE = "ACTIVE";

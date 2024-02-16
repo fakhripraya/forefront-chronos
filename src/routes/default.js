@@ -116,7 +116,7 @@ const defaultRoute = (app) => {
 
   // TODO: FIX VERSIONING ON ROUTE, VERSIONING IS NOT ABOUT THE APP VERSION BUT THE ROUTE VERSION
   app.post(
-    `/v${process.env.APP_MAJOR_VERSION}/files/upload`,
+    `/v1/files/upload`,
     checkAuth,
     upload.none(),
     async (req, res) => {
