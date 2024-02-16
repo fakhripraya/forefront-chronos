@@ -55,12 +55,14 @@ const defaultRoute = (app) => {
         mimeType || mime.lookup(filePath);
 
       const multipartResponse = {
+        id: fileId,
         name: fileName,
         type: fileMimeType,
         size: stat.size,
         url: `${req.protocol}://${req.get(
           "host"
         )}/public/uploads/${fileType}/${fileId}/${fileName}`,
+        destination: `/public/uploads/${fileType}/${fileId}/${fileName}`,
       };
 
       // Return the multipart response
@@ -88,6 +90,7 @@ const defaultRoute = (app) => {
               val.mimeType || mime.lookup(filePath);
 
             resolve({
+              id: val.fileId,
               name: val.fileName,
               type: fileMimeType,
               size: fs.statSync(filePath).size,
@@ -96,6 +99,7 @@ const defaultRoute = (app) => {
               )}/public/uploads/${val.fileType}/${
                 val.fileId
               }/${val.fileName}`,
+              destination: `/public/uploads/${val.fileType}/${val.fileId}/${val.fileName}`,
             });
           } catch (error) {
             reject(error);
@@ -118,8 +122,8 @@ const defaultRoute = (app) => {
     async (req, res) => {
       const files = JSON.parse(req.body.files);
       // Proceed mapping the new file objects into the desired format
-      let fileDatas;
-      let fileDataDestinations;
+      let fileDatas = [];
+      let fileDataDestinations = [];
       for (let index = 0; index < files.length; index++) {
         const newId = uuid();
         const destination = `${DYNAMIC_ASSET_FOLDER_PATH}/${files[index].fileType}/${newId}/file_${newId}`;
@@ -188,18 +192,18 @@ const defaultRoute = (app) => {
     async (req, res) => {
       const files =
         req.body.files && JSON.parse(req.body.files);
-      const oldFiles =
-        req.body.oldFiles && JSON.parse(req.body.oldFiles);
-      const fileType = req.query.fileType;
-
-      if (!fileType)
-        return res.status(400).send("Error: No fileType");
+      const removedFileIds =
+        req.body.removedFileIds &&
+        JSON.parse(req.body.removedFileIds);
+      const removedFileDestinations =
+        req.body.removedFileDestinations &&
+        JSON.parse(req.body.removedFileDestinations);
 
       // Proceed mapping the new file objects into the desired format
       // This will overwritte all the file info from the database
       // Aswell as the file binary from the filesystem
-      let fileDatas;
-      let fileDataDestinations;
+      let fileDatas = [];
+      let fileDataDestinations = [];
       for (let index = 0; index < files.length; index++) {
         const newId = uuid();
         const destination = `${DYNAMIC_ASSET_FOLDER_PATH}/${files[index].fileType}/${newId}/file_${newId}`;
@@ -224,8 +228,7 @@ const defaultRoute = (app) => {
         // delete all the file info on the database
         await MasterFile.destroy({
           where: {
-            fileType: fileType,
-            id: oldFiles.ids,
+            id: removedFileIds,
           },
         });
         // bulk create the files that in an array format
@@ -260,7 +263,8 @@ const defaultRoute = (app) => {
         await trx.commit();
         // destroy the old files
         // this should be executed only after all the database execution done successfully
-        unlinkFilesSync(oldFiles.destinations);
+        console.log(removedFileDestinations);
+        unlinkFilesSync(removedFileDestinations);
         // Send an appropriate response to the client
         return res
           .status(200)
@@ -277,20 +281,42 @@ const defaultRoute = (app) => {
     checkAuth,
     upload.none(),
     async (req, res) => {
-      const oldFiles = JSON.parse(req.body.oldFiles);
-      const fileType = req.query.fileType;
-      if (!fileType)
-        return res.status(400).send("Error: No fileType");
+      const ids = req.body.ids;
+      const displayItemIds = req.body.displayItemIds;
+      const fileType = req.body.fileType;
+
+      let whereOpt = {};
+
+      if (ids)
+        whereOpt = {
+          id: ids,
+        };
+
+      if (displayItemIds)
+        whereOpt = {
+          ...whereOpt,
+          displayItemId: displayItemIds,
+        };
+
+      if (fileType)
+        whereOpt = {
+          ...whereOpt,
+          fileType: fileType,
+        };
 
       // do the transaction
       const trx = await db.transaction();
       try {
+        // Find files by array of IDs
+        const files = await MasterFile.findAll({
+          where: whereOpt,
+          transaction: trx,
+        });
+
         // delete all the file info on the database
         await MasterFile.destroy({
-          where: {
-            fileType: fileType,
-            id: oldFiles.ids,
-          },
+          where: whereOpt,
+          transaction: trx,
         });
 
         // commit the db transaction
