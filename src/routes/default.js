@@ -313,6 +313,10 @@ const defaultRoute = (app) => {
           transaction: trx,
         });
 
+        const destinations = files.map(
+          (val) => val.destination
+        );
+
         // delete all the file info on the database
         await MasterFile.destroy({
           where: whereOpt,
@@ -323,7 +327,7 @@ const defaultRoute = (app) => {
         await trx.commit();
         // destroy the old files
         // this should be executed only after all the database execution done successfully
-        unlinkFilesSync(oldFiles.destinations);
+        unlinkFilesSync(destinations);
         // Send an appropriate response to the client
         return res
           .status(200)
