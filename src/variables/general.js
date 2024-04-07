@@ -1,3 +1,8 @@
+// APP STATE
+exports.DEV = "DEV";
+exports.PREPROD = "PREPROD";
+exports.PROD = "PROD";
+
 // GENERAL
 exports.USER = "USER";
 exports.SUCCESS = "SUCCESS";

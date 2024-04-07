@@ -29,6 +29,7 @@
     "forefront-polus": "file:tarball/forefront-polus-1.2.1.tgz",
     "fs-extra": "^11.1.0",
     "googleapis": "^110.0.0",
+    "httpolyglot": "^0.1.2",
     "jsonwebtoken": "^9.0.0",
     "mime-types": "^2.1.35",
     "morgan": "^1.10.0",
