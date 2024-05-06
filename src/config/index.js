@@ -58,7 +58,7 @@ const AppConfig = (app, express) => {
         secure: APP_STATE === PROD || APP_STATE === PREPROD, // it should set automatically to secure if is https.
         httpOnly:
           APP_STATE === PROD || APP_STATE === PREPROD,
-        maxAge: 3 * 60 * 60 * 1000,
+        maxAge: 24 * 60 * 60 * 1000,
       },
       proxy: true, // if you do SSL outside of node.
       resave: false, // don't save session if unmodified
